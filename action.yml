@@ -20,10 +20,7 @@ inputs:
     description: "Only run tests on changed files (over base branch)"
     required: false
     default: "false"
-  log-level:
-    description: "Set the log level"
-    required: false
-    default: "info"
+ 
 
 runs:
   using: "node20"
