@@ -52,18 +52,24 @@ export async function run(): Promise<void> {
     core.info(`Running jest with command: ${cmd}`)
 
     const std = await execJest(cmd, CWD)
+    core.startGroup("jest command executed")
     core.info(`jest command executed:\n${JSON.stringify(std, null, 2)}`)
+    core.endGroup()
 
     // octokit
     const octokit = getOctokit(token)
 
     // Parse results
     const results = parseResults(RESULTS_FILE)
+    core.startGroup("Parsed results")
     core.info(`Parsed results:\n${JSON.stringify(results, null, 2)}`)
+    core.endGroup()
 
     // Checks
     const checkPayload = getCheckPayload(results, CWD, std)
+    core.startGroup("Check payload")
     core.info(`Check payload:\n${JSON.stringify(checkPayload, null, 2)}`)
+    core.endGroup()
 
     await octokit.rest.checks
       .create(checkPayload)
@@ -390,7 +396,12 @@ async function execJest(
 
     core.info("Jest command executedi JL")
   } catch (e) {
+    core.startGroup("Jest command failed")
     core.error(`Jest execution failed. Tests have likely failed.\n${JSON.stringify(e)}`)
+    core.endGroup()
+    core.setFailed(
+      `Jest execution failed. Tests have likely failed.\n${JSON.stringify(e)}`,
+    )
   }
 
   return { out: out.toString(), err: err.toString() }
@@ -427,7 +438,9 @@ const getAnnotations = (
       message: strip(assertion.failureMessages?.join("\n\n") ?? ""),
     }))
   })
+  core.startGroup("Annotations")
   core.info(`Annotations: ${JSON.stringify(annotations, null, 2)}`)
+  core.endGroup()
   return annotations
 }
 
