@@ -62,7 +62,9 @@ export async function run(): Promise<void> {
     // Parse results
     const results = parseResults(RESULTS_FILE)
     core.startGroup("Parsed results")
-    core.info(`Parsed results:\n${JSON.stringify(results, null, 2)}`)
+    core.info(
+      `Parsed results:\n${JSON.stringify({ results: Object.keys(results) }, null, 2)}`,
+    )
     core.endGroup()
 
     // Checks
