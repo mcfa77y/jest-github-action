@@ -26,7 +26,7 @@ type File = {
   coverage: CoverageSummary
 }
 
-export async function run() {
+export async function run(): Promise<void> {
   const workingDirectory = core.getInput("working-directory", { required: false })
   const cwd = workingDirectory ? resolve(workingDirectory) : process.cwd()
   const CWD = cwd + sep
@@ -97,7 +97,7 @@ export async function run() {
       core.setFailed("Some jest tests failed.")
     }
   } catch (error) {
-    console.error(error)
+    core.error(`Action failed: ${error}`)
     core.setFailed(error instanceof Error ? error.message : String(error))
   }
 }
@@ -388,7 +388,7 @@ async function execJest(
     }
     await exec(cmd, [], options)
 
-    core.info("Jest command executed")
+    core.info("Jest command executedi JL")
   } catch (e) {
     core.error(`Jest execution failed. Tests have likely failed.\n${JSON.stringify(e)}`)
   }
